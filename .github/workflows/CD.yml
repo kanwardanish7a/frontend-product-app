@@ -1,0 +1,32 @@
+name: Angular CI/CD Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build the app
+      run: npm run build --prod
+
+    - name: Deploy Angular to VM or Local (IIS)
+      run: |
+        # Use SSH to copy the build to the VM or local server
+        scp -r ./dist/* your-username@your-vm-ip:/path/to/your/web/server/
+        # Alternatively, you can use PowerShell to copy files if using Windows agents
+        # Invoke-Command -ScriptBlock {Copy-Item -Path './dist/*' -Destination 'C:\inetpub\wwwroot\your-app-folder\' -Recurse}
